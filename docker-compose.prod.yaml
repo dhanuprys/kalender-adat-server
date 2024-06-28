@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+  webapp:
+    image: dhanuprys/kalender-bali:latest
+    ports:
+      - '${APP_PORT:-9988}:80'
+    volumes:
+      - './.env:/var/www/html/.env'
+      - './storage:/var/www/html/storage'
+    restart: always
+    networks:
+      - mantram-net
+    depends_on:
+      - postgres
+
+  postgres:
+    image: 'postgres:16'
+    restart: always
+    ports:
+        - '${FORWARD_DB_PORT:-5432}:5432'
+    environment:
+        POSTGRES_USER: '${DB_USERNAME}'
+        POSTGRES_PASSWORD: '${DB_PASSWORD}'
+        POSTGRES_DB: '${DB_DATABASE}'
+        PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+        - 'mantram-postgres:/var/lib/postgresql/data/pgdata'
+    networks:
+        - mantram-net
+
+networks:
+  mantram-net:
+    driver: bridge
+volumes:
+  mantram-postgres:
+    driver: local
