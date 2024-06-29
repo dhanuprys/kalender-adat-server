@@ -5,3 +5,11 @@
 html {
     @apply text-slate-900
 }
+
+.bg-glowing {
+    background: rgba(255, 0, 255, 0.2);
+    box-shadow:
+      0 5px 30px red,            /* outer white */
+      0px 0 20px rgb(24, 26, 154),        /* outer left magenta */
+      0px 0 10px #0ff;         /* outer right cyan */
+}

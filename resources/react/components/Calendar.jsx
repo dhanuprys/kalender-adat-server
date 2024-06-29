@@ -201,7 +201,7 @@ function Calendar() {
                     {
                         cells.map((cell, idx) => {
                             if (cell.type === 'blank') {
-                                return <div key={idx} className="bg-black flex justify-center items-center">
+                                return <div key={idx} onClick={() => isLoading && doCalendarRefresh()} className="bg-black flex justify-center items-center">
                                     {
                                         isLoading
                                             ? <svg className="w-[22px] h-[22px] text-white animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/></svg>
@@ -238,7 +238,7 @@ function Calendar() {
                                         </div>
                                         <div></div>
                                     </div>}
-                                    <div className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${cell.today ? 'bg-green-200' : 'hover:bg-slate-200'}`}>
+                                    <div className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${cell.today ? 'bg-green-100 border-2 border-slate-400' : 'hover:bg-slate-100'}`}>
                                         <div className={`w-[35px] h-[35px] text-sm flex justify-center items-center rounded-full ${todaysEvent ? `border-4 ${generateBorderClassName(todaysEvent)}` : ''} ${cell.date.weekday === 7 || (calendarHoliday && calendarHoliday[currentDateFormat]) ? 'text-red-600 font-semibold' : ''}`}>{cell.date.toFormat('d')}</div>
                                     </div>
                                 </div>
