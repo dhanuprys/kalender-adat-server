@@ -21,7 +21,8 @@ RUN php artisan config:cache \
     && php artisan event:cache \
     && php artisan route:cache \
     && php artisan view:cache \
-    && php artisan icons:cache
+    && php artisan icons:cache \
+    && php artisan optimize
 
 RUN npm install && npm run build
 
