@@ -16,6 +16,7 @@ COPY ./.deployment/supervisord.conf /etc/supervisord.conf
 COPY . .
 
 RUN composer install --optimize-autoloader --no-dev
+RUN php artisan storage:link
 RUN php artisan config:cache \
     && php artisan event:cache \
     && php artisan route:cache \
