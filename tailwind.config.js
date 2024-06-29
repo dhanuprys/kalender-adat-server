@@ -6,6 +6,9 @@ export default {
             pattern: /border-(red|green|blue|yellow|slate|purple|indigo|pink)-(500)/,
         },
         {
+            pattern: /border-?(t|l|r|b)?-?(red|green|blue|yellow|slate|purple|indigo|pink)-(600)/,
+        },
+        {
             pattern: /bg-(red|green|blue|yellow|slate|purple|indigo|pink)-(500)/,
         },
     ],

@@ -8,12 +8,20 @@ export const wukuNames= [
     "Bala", "Ugu", "Wayang", "Kelawu", "Dukut", "Watugunung"
 ];
 
+// Tanggal pertama dimulainya wuku Sinta
 const referenceDate = new Date(2023, 12, 19);
 
 function getWuku(current) {
-    const betweenWeek = weeksBetween(referenceDate, current);
+    // Menghitung jarak tanggal pada parameter dengan referensi
+    const betweenWeek = weeksBetween(
+        referenceDate,
+        current);
+
+    // Membagi dan kalkulasi untuk mencari index wuku
     const resetDate = Math.floor(betweenWeek / 30);
-    const preDate = resetDate * 30; // 90 => 0
+
+    const preDate = resetDate * 30;
+    // 32 - 30 = 2 => Ukir
     const wukuIndex = betweenWeek - preDate;
 
     return wukuNames[wukuIndex];

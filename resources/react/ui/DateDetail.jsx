@@ -13,7 +13,7 @@ function EventCard({ title, imageUrl, description, categoryName, categoryColor, 
                 <img className="w-full h-full object-cover rounded-t" src={`/storage/${imageUrl}`} />
             </div>}
             <div className="p-4">
-                <h2 className="text-xl">{title}</h2>
+                <h2 className="text-xl font-semibold">{title}</h2>
                 <p>{description}</p>
                 <div className="flex items-center gap-2 mt-3">
                     <div className={`w-[10px] h-[10px] bg-${categoryColor}-500 rounded-full`}></div>

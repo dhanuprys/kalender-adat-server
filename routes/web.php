@@ -4,9 +4,14 @@ use App\Models\EventCalendar;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
+
 Route::get('/', function () {
     return view('main');
 });
+
+Route::get('/date/{all}', function () {
+    return view('main');
+})->where('all', '.*');
 
 Route::prefix('/api')->group(function () {
     Route::get('/calendar', function (Request $request) {

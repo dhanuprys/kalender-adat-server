@@ -1,7 +1,8 @@
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
 import Home from './ui/Home';
 import DateDetail from './ui/DateDetail';
+import { useEffect } from 'react';
 
 const router = createBrowserRouter([
     {
@@ -16,7 +17,21 @@ const router = createBrowserRouter([
         path: "about",
         element: <div className="hello">About</div>,
     },
+    {
+        path: "*",
+        element: <NoMatch />,
+    },
 ]);
+
+function NoMatch() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        navigate('/');
+    }, [])
+
+    return '';
+}
 
 ReactDOM.createRoot(document.getElementById('app')).render(
     <RouterProvider router={router} />

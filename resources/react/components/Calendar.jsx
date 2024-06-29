@@ -7,19 +7,25 @@ import useSWRImmutable from 'swr/immutable';
 import { mutate } from 'swr';
 
 function Calendar() {
-    const [isLoading, setLoading] = useState(true);
-    const [calendar, setCalendar] = useState([]);
     const [currentDate, setCurrentDate] = useState(DateTime.now());
-    const [calendarRefresh, doCalendarRefresh] = useReducer((x) => x + 1, 0);
     const navigate = useNavigate();
+    const { data: calendar, error: calendarError, isLoading } = useSWRImmutable(
+        `/api/calendar?month=${currentDate.month}&year=${currentDate.year}`,
+        (url) => axios.get(url)
+            .then((res) => normalizeDateList(res.data))
+    );
 
-    const openPrevMonth = () => {
+    const openPrevMonth = useCallback(() => {
         setCurrentDate(currentDate.minus({ month: 1 }));
-    }
+    }, [currentDate]);
 
-    const openNextMonth = async () => {
+    const openNextMonth = useCallback(() => {
         setCurrentDate(currentDate.plus({ month: 1 }));
-    }
+    }, [currentDate]);
+
+    const doCalendarRefresh = useCallback(() => {
+        mutate(`/api/calendar?month=${currentDate.month}&year=${currentDate.year}`);
+    }, [currentDate]);
 
     const normalizeDateList = useCallback((calendar) => {
         let output = {};
@@ -31,6 +37,28 @@ function Calendar() {
         }
 
         return output;
+    }, []);
+
+    const generateBorderClassName = useCallback((colors) => {
+        if (!colors) return '';
+
+        const colorSet = [...new Set(colors)];
+
+        switch(colorSet.length) {
+            case 1:
+                return `border-${colorSet[0]}-600`;
+                break;
+            case 2:
+                return `border-t-${colorSet[0]}-600 border-r-${colorSet[0]}-600 border-l-${colorSet[1]}-600 border-b-${colorSet[1]}-600`;
+                break;
+            case 3:
+                return `border-t-${colorSet[0]}-600 border-r-${colorSet[0]}-600 border-l-${colorSet[1]}-600 border-b-${colorSet[2]}-600`;
+                break;
+            case 4:
+                return `border-t-${colorSet[0]}-600 border-r-${colorSet[1]}-600 border-l-${colorSet[2]}-600 border-b-${colorSet[3]}-600`;
+            default:
+
+        }
     });
 
     const cells = useMemo(() => {
@@ -131,20 +159,11 @@ function Calendar() {
         }
 
         return output;
-    }, [currentDate, calendarRefresh]);
-
-    useEffect(() => {
-        setLoading(true);
-
-        axios.get(`/api/calendar?month=${currentDate.month}&year=${currentDate.year}`)
-            .then((res) => setCalendar(normalizeDateList(res.data)))
-            .catch((error) => {})
-            .finally(() => setLoading(false));
-    }, [currentDate, calendarRefresh]);
+    }, [currentDate]);
 
     return (
         <div className="h-[100vh] w-[100vw] flex flex-col">
-            <div className="bg-red-500 p-4 pt-8 flex items-center gap-4 text-white">
+            <div className="bg-red-600 p-4 pt-8 flex items-center gap-4 text-white">
                 <div className="px-2">
                     <svg className="w-[20px] h-[20px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" />
                     </svg>
@@ -168,7 +187,7 @@ function Calendar() {
                                     {
                                         isLoading
                                             ? <svg className="w-[22px] h-[22px] text-white animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/></svg>
-                                            : <svg onClick={doCalendarRefresh} className="w-[22px] h-[22px] text-white transition-all hover:rotate-90" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M463.5 224H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5z"/></svg>
+                                            : <svg onClick={doCalendarRefresh} className="w-[22px] h-[22px] text-white transition-all hover:rotate-90 hover:text-slate-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M463.5 224H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5z"/></svg>
                                     }
                                 </div>
                             }
@@ -191,7 +210,7 @@ function Calendar() {
                             }
 
                             const currentDateFormat = cell.date.toFormat('yyyy-MM-dd');
-                            const todaysEvent = calendar[currentDateFormat];
+                            const todaysEvent = calendar ? calendar[currentDateFormat] : null;
 
                             return (
                                 <div key={idx} onClick={() => todaysEvent && navigate(`/date/${currentDateFormat}`)} className={`relative flex justify-center items-center border-[0.5px] ${!cell.current ? 'bg-slate-900 text-slate-600 border-slate-800' : 'border-slate-300'}`}>
@@ -199,10 +218,10 @@ function Calendar() {
                                         <div className="flex justify-end">
                                             <div className="w-[10px] h-[10px] rounded-full text-xs">'{todaysEvent.length}</div>
                                         </div>
-                                        {/* <div>BOTTOM</div> */}
+                                        <div></div>
                                     </div>}
                                     <div className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${cell.today ? 'bg-green-200' : 'hover:bg-slate-200'}`}>
-                                        <div className={`w-[35px] h-[35px] text-sm flex justify-center items-center rounded-full ${todaysEvent ? `border-4 border-${todaysEvent[0]}-500` : ''} ${cell.date.weekday === 7 ? 'text-red-600' : ''}`}>{cell.date.toFormat('d')}</div>
+                                        <div className={`w-[35px] h-[35px] text-sm flex justify-center items-center rounded-full ${todaysEvent ? `border-4 ${generateBorderClassName(todaysEvent)}` : ''} ${cell.date.weekday === 7 ? 'text-red-600' : ''}`}>{cell.date.toFormat('d')}</div>
                                     </div>
                                 </div>
                             );

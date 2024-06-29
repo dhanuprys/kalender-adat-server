@@ -5,23 +5,3 @@
 html {
     @apply text-slate-900
 }
-
-.mantram-accordion.is-active {
-    align-items: flex-start !important;
-}
-
-.mantram-accordion.is-active svg {
-    rotate: 90deg;
-}
-
-.mantram-accordion .ma-active {
-    display: none;
-}
-
-.mantram-accordion.is-active .ma-active {
-    display: block;
-}
-
-.mantram-accordion.is-active .ma-short {
-    display: none;
-}

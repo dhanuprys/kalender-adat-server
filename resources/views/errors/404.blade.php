@@ -1,14 +1,8 @@
-@extends('layouts.app')
-
-@section('title', 'Tidak Ditemukan')
-
-@section('header')
-    @include('layouts.ui.basichead', [
-        'title' => 'Halaman Tidak Ditemukan',
-        'backHref' => '/',
-    ])
-@endsection
-
-@section('content')
-    <script>window.location.href = '/'</script>
-@endsection
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <script>window.location.href = '/'</script>
+    </body>
+</html>
