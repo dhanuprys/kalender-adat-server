@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { DateTime } from 'luxon';
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import getWuku from '../utils/getWuku';
 import { useNavigate } from 'react-router-dom';
 import useSWRImmutable from 'swr/immutable';
@@ -9,10 +9,15 @@ import { mutate } from 'swr';
 function Calendar() {
     const [currentDate, setCurrentDate] = useState(DateTime.now());
     const navigate = useNavigate();
+    const { data: calendarHoliday } = useSWRImmutable(
+        `/api/holiday?month=${currentDate.month}&year=${currentDate.year}`,
+        (url) => axios.get(url)
+            .then((res) => normalizeHolidayDateList(res.data))
+    );
     const { data: calendar, error: calendarError, isLoading } = useSWRImmutable(
         `/api/calendar?month=${currentDate.month}&year=${currentDate.year}`,
         (url) => axios.get(url)
-            .then((res) => normalizeDateList(res.data))
+            .then((res) => normalizeColorDateList(res.data))
     );
 
     const openPrevMonth = useCallback(() => {
@@ -24,10 +29,23 @@ function Calendar() {
     }, [currentDate]);
 
     const doCalendarRefresh = useCallback(() => {
+        mutate(`/api/holiday?month=${currentDate.month}&year=${currentDate.year}`);
         mutate(`/api/calendar?month=${currentDate.month}&year=${currentDate.year}`);
     }, [currentDate]);
 
-    const normalizeDateList = useCallback((calendar) => {
+    const normalizeHolidayDateList = useCallback((calendar) => {
+        let output = {};
+
+        for (const event of calendar) {
+            output[event.date] || (output[event.date] = []);
+
+            output[event.date].push(true);
+        }
+
+        return output;
+    }, []);
+
+    const normalizeColorDateList = useCallback((calendar) => {
         let output = {};
 
         for (const event of calendar) {
@@ -163,7 +181,7 @@ function Calendar() {
 
     return (
         <div className="h-[100vh] w-[100vw] flex flex-col">
-            <div className="bg-red-600 p-4 pt-8 flex items-center gap-4 text-white">
+            <div className="bg-red-500 p-4 pt-6 flex items-center gap-4 text-white">
                 <div className="px-2">
                     <svg className="w-[20px] h-[20px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" />
                     </svg>
@@ -221,7 +239,7 @@ function Calendar() {
                                         <div></div>
                                     </div>}
                                     <div className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${cell.today ? 'bg-green-200' : 'hover:bg-slate-200'}`}>
-                                        <div className={`w-[35px] h-[35px] text-sm flex justify-center items-center rounded-full ${todaysEvent ? `border-4 ${generateBorderClassName(todaysEvent)}` : ''} ${cell.date.weekday === 7 ? 'text-red-600' : ''}`}>{cell.date.toFormat('d')}</div>
+                                        <div className={`w-[35px] h-[35px] text-sm flex justify-center items-center rounded-full ${todaysEvent ? `border-4 ${generateBorderClassName(todaysEvent)}` : ''} ${cell.date.weekday === 7 || (calendarHoliday && calendarHoliday[currentDateFormat]) ? 'text-red-600 font-semibold' : ''}`}>{cell.date.toFormat('d')}</div>
                                     </div>
                                 </div>
                             );

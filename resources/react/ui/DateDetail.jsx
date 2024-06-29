@@ -37,6 +37,13 @@ function DateDetail() {
             shouldRetryOnError: false
         }
     );
+    const { data: holiday } = useSWRImmutable(
+        `/api/holiday/${date}`,
+        (url) => axios.get(url).then(response => response.data),
+        {
+            shouldRetryOnError: false
+        }
+    );
 
     const dayString = useMemo(() => {
         const currentDate = DateTime.fromFormat(date, 'yyyy-MM-dd');
@@ -57,12 +64,13 @@ function DateDetail() {
     return (
         <div>
             {/* HEADER */}
-            <div className="sticky top-0 shadow bg-red-500 p-4 pt-8 grid grid-cols-8 items-center gap-4 text-white">
+            <div className="sticky top-0 shadow bg-red-500 p-4 pt-6 grid grid-cols-8 items-center gap-4 text-white">
                 <div onClick={() => navigate(-1)}>
                     <svg className="w-[20px] h-[20px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" /></svg>
                 </div>
-                <div className="col-span-6 flex items-center justify-center">
-                    <div className="inline px-6 py-2 font-bold text-lg">{dayString}</div>
+                <div className="col-span-6 flex flex-col items-center justify-center">
+                    <div className="inline px-6 font-bold text-lg">{dayString}</div>
+                    {holiday && <span className="text-slate-100 text-center text-sm">Libur {holiday.name}</span>}
                 </div>
                 <div></div>
             </div>

@@ -46,3 +46,8 @@ $ docker compose exec -ti webapp php artisan migrate
 ```bash
 $ docker compose exec -ti webapp php artisan make:filament-user
 ```
+
+## Membuat daftar libur (api-harilibur.vercel.app)
+```bash
+$ docker compose exec -ti webapp php artisan app:fetch-holidays
+```

@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\EventCalendar;
+use App\Models\Holiday;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -14,6 +17,38 @@ Route::get('/date/{all}', function () {
 })->where('all', '.*');
 
 Route::prefix('/api')->group(function () {
+    Route::get('/holiday', function (Request $request) {
+        $year = $request->query->get('year');
+        $month = $request->query->get('month');
+
+        if (!$year || !$month) {
+            return response()->json([]);
+        }
+
+        $holiday = Holiday::whereRaw(
+            'EXTRACT(YEAR FROM date) = ? AND EXTRACT(MONTH FROM date) = ?',
+            [ $year, $month ]
+        )->select([
+            'date'
+        ])->get();
+
+        return response()->json($holiday);
+    });
+
+    Route::get('/holiday/{date}', function ($date) {
+        $holiday = Holiday::where('date', $date)
+            ->select([
+                'date',
+                'name'
+            ])->first();
+
+        if (!$holiday) {
+            return response()->json(null, 404);
+        }
+
+        return response()->json($holiday);
+    });
+
     Route::get('/calendar', function (Request $request) {
         $month = $request->query->get('month');
         $year = $request->query->get('year');
