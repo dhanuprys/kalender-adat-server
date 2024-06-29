@@ -230,15 +230,17 @@ function Calendar() {
                             const currentDateFormat = cell.date.toFormat('yyyy-MM-dd');
                             const todaysEvent = calendar ? calendar[currentDateFormat] : null;
 
+                            console.log(todaysEvent, currentDateFormat);
+
                             return (
-                                <div key={idx} onClick={() => todaysEvent && navigate(`/date/${currentDateFormat}`)} className={`relative flex justify-center items-center border-[0.5px] ${!cell.current ? 'bg-slate-900 text-slate-600 border-slate-800' : 'border-slate-300'}`}>
+                                <div key={idx} onClick={() => todaysEvent && navigate(`/date/${currentDateFormat}`)} className={`relative flex justify-center items-center border-[0.5px] ${!cell.current ? 'bg-slate-900 text-slate-600 border-slate-800' : 'border-slate-300'} ${cell.today ? 'bg-green-100 border-2 border-slate-400' : 'hover:bg-slate-100'}`}>
                                     {todaysEvent && <div className="flex w-full h-full flex-col p-0.5 justify-between">
                                         <div className="flex justify-end">
                                             <div className="w-[10px] h-[10px] rounded-full text-xs">'{todaysEvent.length}</div>
                                         </div>
                                         <div></div>
                                     </div>}
-                                    <div className={`absolute top-0 left-0 w-full h-full flex justify-center items-center ${cell.today ? 'bg-green-100 border-2 border-slate-400' : 'hover:bg-slate-100'}`}>
+                                    <div className={`absolute top-0 left-0 w-full h-full flex justify-center items-center`}>
                                         <div className={`w-[35px] h-[35px] text-sm flex justify-center items-center rounded-full ${todaysEvent ? `border-4 ${generateBorderClassName(todaysEvent)}` : ''} ${cell.date.weekday === 7 || (calendarHoliday && calendarHoliday[currentDateFormat]) ? 'text-red-600 font-semibold' : ''}`}>{cell.date.toFormat('d')}</div>
                                     </div>
                                 </div>
