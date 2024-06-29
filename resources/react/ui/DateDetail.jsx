@@ -8,7 +8,7 @@ function EventCard({ title, imageUrl, description, categoryName, categoryColor, 
     const humanizeUpdatedAt = DateTime.fromISO(updatedAt).setLocale('id').toFormat('dd MMMM yyyy');
 
     return (
-        <div className="bg-slate-50 rounded shadow">
+        <div className="border border-slate-100 rounded shadow">
             {imageUrl && <div className="h-[150px] bg-red-200 rounded-t">
                 <img className="w-full h-full object-cover rounded-t" src={`/storage/${imageUrl}`} />
             </div>}
@@ -19,10 +19,42 @@ function EventCard({ title, imageUrl, description, categoryName, categoryColor, 
                     <div className={`w-[10px] h-[10px] bg-${categoryColor}-500 rounded-full`}></div>
                     <div>{categoryName}</div>
                 </div>
-                <div className="flex justify-end mt-4">
+                <div className="flex justify-end mt-6">
                     <p className="text-slate-400 text-sm">Diperbarui pada {humanizeUpdatedAt}</p>
                 </div>
             </div>
+        </div>
+    );
+}
+
+function EventCardSkeleton({ opacity }) {
+    return (
+        <div className="border border-slate-100 rounded shadow" style={{ opacity }}>
+            <div className="h-[150px] bg-slate-400 animate-pulse rounded-t"></div>
+            <div className="p-4">
+                <div className="bg-slate-300 animate-pulse rounded w-[80%] h-[22px] mb-2"></div>
+                <div className="flex flex-col gap-2">
+                    <div className="bg-slate-300 animate-pulse rounded w-[200px] h-[18px]"></div>
+                    <div className="bg-slate-300 animate-pulse rounded w-[150px] h-[18px]"></div>
+                </div>
+                <div className="flex items-center gap-2 mt-3">
+                    <div className={`w-[10px] h-[10px] animate-pulse bg-slate-500 rounded-full`}></div>
+                    <div className="bg-slate-300 animate-pulse rounded w-[100px] h-[18px]"></div>
+                </div>
+                <div className="flex justify-end mt-6">
+                    <div className="bg-slate-300 animate-pulse rounded w-[140px] h-[18px]"></div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function SkeletonLoading() {
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+            <EventCardSkeleton />
+            <EventCardSkeleton opacity={0.4} />
+            <EventCardSkeleton opacity={0.2} />
         </div>
     );
 }
@@ -56,9 +88,9 @@ function DateDetail() {
     });
 
     if (!dayString) {
-        navigate(-1);
+        navigate('/');
 
-        return 'invalid';
+        return '';
     }
 
     return (
@@ -96,7 +128,7 @@ function DateDetail() {
                         }
                     </div>
                     : isLoading
-                        ? <div className="flex justify-center items-center h-[70vh]">Loading...</div>
+                        ? <SkeletonLoading />
                         : eventError
                             ? <div className="flex justify-center items-center h-[70vh]">Gagal memuat data</div>
                             : null
