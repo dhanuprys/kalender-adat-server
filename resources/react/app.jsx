@@ -1,11 +1,8 @@
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
-// import Home from './ui/Home';
-// import DateDetail from './ui/DateDetail';
+import Home from './ui/Home';
+import DateDetail from './ui/DateDetail';
 import React, { useEffect } from 'react';
-
-const Home = React.lazy(() => import('./ui/Home'));
-const DateDetail = React.lazy(() => import('./ui/DateDetail'));
 
 const router = createBrowserRouter([
     {

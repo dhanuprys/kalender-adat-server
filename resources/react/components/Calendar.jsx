@@ -5,6 +5,7 @@ import getWuku from '../utils/getWuku';
 import { useNavigate } from 'react-router-dom';
 import useSWRImmutable from 'swr/immutable';
 import { mutate } from 'swr';
+import CalendarHeader from './CalendarHeader';
 
 function Calendar() {
     const [currentDate, setCurrentDate] = useState(DateTime.now());
@@ -181,21 +182,11 @@ function Calendar() {
 
     return (
         <div className="h-[100vh] w-[100vw] flex flex-col">
-            <div className="bg-red-500 p-4 pt-6 flex items-center gap-4 text-white">
-                <div className="px-2">
-                    <svg className="w-[20px] h-[20px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" />
-                    </svg>
-                </div>
-                <div className="flex-1 flex justify-between items-center">
-                    <div onClick={openPrevMonth}>
-                        <svg className="w-[20px] h-[20px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" /></svg>
-                    </div>
-                    <div className="border-2 px-6 py-2 font-bold">{currentDate.setLocale('id').toFormat('MMM yyyy')}</div>
-                    <div onClick={openNextMonth}>
-                        <svg className="w-[20px] h-[20px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
-                    </div>
-                </div>
-            </div>
+            <CalendarHeader
+                currentDate={currentDate}
+                openPrevMonth={openPrevMonth}
+                openNextMonth={openNextMonth} />
+
             <div className="flex-1">
                 <div className="grid grid-cols-7 h-full">
                     {
