@@ -50,8 +50,6 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->label('Email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Dibuat Pada'),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Diperbarui Pada')
             ])

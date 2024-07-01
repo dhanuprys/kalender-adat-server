@@ -12,7 +12,7 @@ services:
     networks:
       - kb-net
     healthcheck:
-      test: curl --fail http://localhost/up || exit 1
+      test: curl --fail http://localhost/admin/login || exit 1
       interval: 20s
       timeout: 10s
       retries: 3

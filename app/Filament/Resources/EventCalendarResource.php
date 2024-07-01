@@ -19,6 +19,8 @@ class EventCalendarResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Daftar Acara';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -66,11 +68,15 @@ class EventCalendarResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
+                    ->label('Judul')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('category.name'),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Kategori'),
                 Tables\Columns\TextColumn::make('description')
+                    ->label('Deskripsi')
                     ->limit(10),
                 Tables\Columns\TextColumn::make('date')
+                    ->label('Tanggal')
                     ->sortable()
                     ->searchable(),
             ])

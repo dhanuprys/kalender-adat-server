@@ -50,9 +50,12 @@ class EventCategoryResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                                         ->label('Nama')
                                         ->searchable(),
-                Tables\Columns\TextColumn::make('color')
-                                        ->label('Warna')
-                                        ->searchable()
+                // Tables\Columns\TextColumn::make('color')
+                //                         ->label('Warna')
+                //                         ->searchable()
+                Tables\Columns\ViewColumn::make('color')
+                    ->label('Warna')
+                    ->view('filament.tables.columns.color-viewer')
             ])
             ->filters([
                 //
