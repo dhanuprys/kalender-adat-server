@@ -17,6 +17,47 @@ Route::get('/date/{all}', function () {
 })->where('all', '.*');
 
 Route::prefix('/api')->group(function () {
+    Route::prefix('/v1')->group(function () {
+        Route::get('/calendar', function (Request $request) {
+            $month = $request->query->get('month');
+            $year = $request->query->get('year');
+
+            if (!$month || !$year) {
+                return response()->json([
+                    'message' => 'Month and year is required',
+                ], 400);
+            }
+
+            $group = [];
+            $output = [];
+
+            $events = EventCalendar::join('event_categories as ec', 'ec.id', '=', 'event_calendars.category_id')
+                ->whereRaw(
+                    'EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ?',
+                    [$month, $year]
+                )
+                ->select([
+                    'ec.color',
+                    'date'
+                ])
+                ->get();
+
+            foreach ($events as $event) {
+                $group[$event->date][] = $event->color;
+            }
+
+            foreach ($group as $date => $colors) {
+                $output[] = [
+                    'date' => $date,
+                    'color' => $colors,
+                    'event_count' => count($colors)
+                ];
+            }
+
+            return response()->json($output);
+        });
+    });
+
     Route::get('/holiday', function (Request $request) {
         $year = $request->query->get('year');
         $month = $request->query->get('month');
