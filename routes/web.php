@@ -67,6 +67,7 @@ Route::prefix('/api')->group(function () {
                     'ec.name as category_name',
                 ])
                 ->where('date', $date)
+                ->orderBy('ec.color')
                 ->get();
 
             return response()->json($events);
