@@ -41,13 +41,22 @@ Route::prefix('/api')->group(function () {
                 ->get();
 
             foreach ($events as $event) {
+                if (!isset($group[$event->date])) {
+                    $group[$event->date] = [];
+                }
+
+                // Duplicate detection
+                if (in_array($event->color, $group[$event->date])) {
+                    continue;
+                }
+
                 $group[$event->date][] = $event->color;
             }
 
             foreach ($group as $date => $colors) {
                 $output[] = [
                     'date' => $date,
-                    'colors' => array_unique($colors),
+                    'colors' => $colors,
                     'event_count' => count($colors)
                 ];
             }
