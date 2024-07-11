@@ -47,7 +47,7 @@ Route::prefix('/api')->group(function () {
             foreach ($group as $date => $colors) {
                 $output[] = [
                     'date' => $date,
-                    'colors' => $colors,
+                    'colors' => array_unique($colors),
                     'event_count' => count($colors)
                 ];
             }
