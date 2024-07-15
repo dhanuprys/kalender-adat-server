@@ -1,2 +1,2 @@
-docker build -t dhanuprys/kalender-bali:latest .
-docker push dhanuprys/kalender-bali:latest
+docker build -t dhanuprys/kalender-adat-server:latest .
+docker push dhanuprys/kalender-adat-server:latest

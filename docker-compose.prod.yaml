@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   webapp:
-    image: dhanuprys/kalender-bali:latest
+    image: dhanuprys/kalender-adat-server:latest
     ports:
       - '${APP_PORT:-9988}:80'
     volumes:
