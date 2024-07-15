@@ -83,95 +83,36 @@ Route::prefix('/api')->group(function () {
             return response()->json($output);
         });
 
-        Route::get('/calendar/{date}', function ($date) {
-            $events = EventCalendar::join('event_categories as ec', 'ec.id', '=', 'event_calendars.category_id')
-                ->select([
-                    'event_calendars.id',
-                    'event_calendars.image_url',
-                    'event_calendars.title',
-                    'event_calendars.description',
-                    'event_calendars.updated_at',
-                    'ec.color as category_color',
-                    'ec.name as category_name',
-                ])
-                ->where('date', $date)
-                ->orderBy('ec.color')
-                ->get();
+        Route::get('/holiday', function (Request $request) {
+            $year = $request->query->get('year');
+            $month = $request->query->get('month');
 
-            return response()->json($events);
-        });
-    });
+            if (!$year || !$month) {
+                return response()->json([]);
+            }
 
-    Route::get('/holiday', function (Request $request) {
-        $year = $request->query->get('year');
-        $month = $request->query->get('month');
-
-        if (!$year || !$month) {
-            return response()->json([]);
-        }
-
-        $holiday = Holiday::whereRaw(
-            'EXTRACT(YEAR FROM date) = ? AND EXTRACT(MONTH FROM date) = ?',
-            [ $year, $month ]
-        )->select([
-            'date'
-        ])->get();
-
-        return response()->json($holiday);
-    });
-
-    Route::get('/holiday/{date}', function ($date) {
-        $holiday = Holiday::where('date', $date)
-            ->select([
-                'date',
-                'name'
-            ])->first();
-
-        if (!$holiday) {
-            return response()->json(null, 404);
-        }
-
-        return response()->json($holiday);
-    });
-
-    Route::get('/calendar', function (Request $request) {
-        $month = $request->query->get('month');
-        $year = $request->query->get('year');
-
-        if (!$month || !$year) {
-            return response()->json([
-                'message' => 'Month and year is required',
-            ], 400);
-        }
-
-        $events = EventCalendar::join('event_categories as ec', 'ec.id', '=', 'event_calendars.category_id')
-            ->whereRaw(
-                'EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ?',
-                [$month, $year]
-            )
-            ->select([
-                'ec.color',
+            $holiday = Holiday::whereRaw(
+                'EXTRACT(YEAR FROM date) = ? AND EXTRACT(MONTH FROM date) = ?',
+                [ $year, $month ]
+            )->select([
                 'date'
-            ])
-            ->get();
+            ])->get();
 
-        return response()->json($events);
-    });
+            return response()->json($holiday);
+        });
 
-    Route::get('/calendar/{date}', function ($date) {
-        $events = EventCalendar::join('event_categories as ec', 'ec.id', '=', 'event_calendars.category_id')
-            ->select([
-                'event_calendars.id',
-                'event_calendars.image_url',
-                'event_calendars.title',
-                'event_calendars.description',
-                'event_calendars.updated_at',
-                'ec.color as category_color',
-                'ec.name as category_name',
-            ])
-            ->where('date', $date)
-            ->get();
+        Route::get('/holiday/{date}', function ($date) {
+            $holiday = Holiday::where('date', $date)
+                ->select([
+                    'date',
+                    'name'
+                ])->first();
 
-        return response()->json($events);
+            if (!$holiday) {
+                return response()->json(null, 404);
+            }
+
+            return response()->json($holiday);
+        });
     });
 });
