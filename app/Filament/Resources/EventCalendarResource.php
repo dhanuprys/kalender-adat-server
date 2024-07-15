@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\EventCalendarResource\Pages;
 use App\Filament\Resources\EventCalendarResource\RelationManagers;
 use App\Models\EventCalendar;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -77,6 +78,9 @@ class EventCalendarResource extends Resource
                     ->limit(10),
                 Tables\Columns\TextColumn::make('date')
                     ->label('Tanggal')
+                    ->getStateUsing(function ($record) {
+                        return Carbon::createFromFormat('Y-m-d', $record->date)->format('d F Y');
+                    })
                     ->sortable()
                     ->searchable(),
             ])

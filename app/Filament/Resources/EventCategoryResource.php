@@ -35,9 +35,7 @@ class EventCategoryResource extends Resource
                                             'green' => 'Hijau (green)',
                                             'yellow' => 'Kuning (yellow)',
                                             'purple' => 'Ungu (purple)',
-                                            'indigo' => 'Indigo (indigo)',
-                                            'pink' => 'Pink (pink)',
-                                            'slate' => 'Hitam (slate)'
+                                            'black' => 'Hitam (black)'
                                         ])
                                         ->default('slate')
             ]);

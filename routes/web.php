@@ -2,6 +2,7 @@
 
 use App\Models\EventCalendar;
 use App\Models\Holiday;
+use App\Models\PurnamaTilem;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,24 @@ Route::get('/date/{all}', function () {
 
 Route::prefix('/api')->group(function () {
     Route::prefix('/v1')->group(function () {
+        Route::get('/purtim', function (Request $request) {
+            $month = $request->query->get('month');
+            $year = $request->query->get('year');
+
+            if (!$month || !$year) {
+                return response()->json([
+                    'message' => 'Month and year is required',
+                ], 400);
+            }
+
+            $days = PurnamaTilem::whereRaw(
+                'EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ?',
+                [$month, $year]
+            )->get();
+
+            return response()->json($days);
+        });
+
         Route::get('/calendar', function (Request $request) {
             $month = $request->query->get('month');
             $year = $request->query->get('year');
