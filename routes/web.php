@@ -6,15 +6,6 @@ use App\Models\PurnamaTilem;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
-
-Route::get('/', function () {
-    return view('main');
-});
-
-Route::get('/date/{all}', function () {
-    return view('main');
-})->where('all', '.*');
-
 Route::prefix('/api')->group(function () {
     Route::prefix('/v1')->group(function () {
         Route::get('/purtim', function (Request $request) {
