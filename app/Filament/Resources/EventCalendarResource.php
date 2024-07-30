@@ -57,10 +57,15 @@ class EventCalendarResource extends Resource
                     ->label('Tanggal')
                     ->required(),
                 Forms\Components\Textarea::make('description')
-                    ->label('Deskripsi'),
+                    ->label('Deskripsi singkat')
+                    ->rows(12)
+                    ->maxLength(500),
                 Forms\Components\FileUpload::make('image_url')
                     ->label('Gambar')
-                    ->directory('events'),
+                    ->directory('events')
+                    ->image()
+                    ->imageEditor()
+                    ->imageCropAspectRatio('16:9')
             ]);
     }
 
