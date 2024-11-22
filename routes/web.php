@@ -6,6 +6,8 @@ use App\Models\PurnamaTilem;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
+Route::redirect('/', '/admin/login');
+
 Route::prefix('/api')->group(function () {
     Route::prefix('/v1')->group(function () {
         Route::get('/purtim', function (Request $request) {
